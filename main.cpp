@@ -2,8 +2,10 @@
 /*
     Compilation:
     g++ -Wall -Wextra main.cpp -o demo `sdl2-config --cflags --libs`
-    Notes: Move the left rectangle with keyboard keys 
-    add a score punctuation on the terminal 
+    Notes: Move the left rectangle with keyboard keys (ready)
+    add a score punctuation on the terminal (ready)
+    add a pause button 
+    add score on the screen
 */
 #include <iostream>
 #include <SDL2/SDL.h>
@@ -180,7 +182,7 @@ int main(int, char*[]) {
     SDL_Event e;
     // ---- Flag if the ball hit the wall 
     int hit = 0;
-    
+    const float paddleSpeed = 380.0f;  // pixels/sec for the left paddle
     // Main loop 
     while (!quit) {
         // Events
@@ -189,48 +191,6 @@ int main(int, char*[]) {
                 // Quit button
                 case SDL_QUIT:
                     quit = true;
-                    break;
-                // Press any key quit
-                case SDL_KEYDOWN:
-                    quit = true;
-                    break;
-                // Mouse setting 
-                case SDL_MOUSEBUTTONDOWN:
-                // If I press the left button of the mouse
-                    if (e.button.button == SDL_BUTTON_LEFT) {
-                        SDL_Point mouse_pos = {e.button.x, e.button.y};
-                        // Setting the muvement of the rectangle
-                        if (SDL_PointInRect(&mouse_pos, &rectangle_move)) {
-                            is_dragging = true;
-                            // remember where inside the rect the user clicked:
-                            click_offset.x = e.button.x - rectangle_move.x;
-                            click_offset.y = e.button.y - rectangle_move.y;
-
-                            // set_capture(true); // optional
-                        }
-                    }
-                    break;
-                // If i stop clicking the muse
-                case SDL_MOUSEBUTTONUP:
-                    if (e.button.button == SDL_BUTTON_LEFT) {
-                        is_dragging = false;
-                    }
-                    break;
-                // Move render when the rectangle is clicked
-                case SDL_MOUSEMOTION:
-                    if (is_dragging) {
-                        // Update rect position based on current mouse position minus initial offset
-                        rectangle_move.x = e.motion.x - click_offset.x;
-                        rectangle_move.y = e.motion.y - click_offset.y;
-
-                        // Optional: clamp so the rectangle stays fully on screen
-                        //rectangle_move.x = clampi(rectangle_move.x, 0, WIDTH  - rectangle_move.w);
-                        rectangle_move.x = clampi(rectangle_move.x, 0, 40  - rectangle_move.w);
-                        rectangle_move.y = clampi(rectangle_move.y, 0, HEIGHT - rectangle_move.h);
-                    }
-                    break;
-
-                default:
                     break;
             }
         }
@@ -245,7 +205,16 @@ int main(int, char*[]) {
         float prevY = ball.y;
         ball.x += ball.vx * dt;
         ball.y += ball.vy * dt;
-
+        const Uint8 *keyState = SDL_GetKeyboardState(NULL);
+        // keyboard settings 
+        if (keyState[SDL_SCANCODE_W]| keyState[SDL_SCANCODE_UP]) {
+            rectangle_move.y -= static_cast<int>(paddleSpeed * dt);
+        }
+        if (keyState[SDL_SCANCODE_S] | keyState[SDL_SCANCODE_DOWN]){
+            rectangle_move.y += static_cast<int>(paddleSpeed * dt);
+        }
+        // Cap if to don't go outside the screen
+        rectangle_move.y = clampi(rectangle_move.y, 0, HEIGHT - rectangle_move.h);
 
         // --- Bounce on walls ---
         if (ball.y - ball.r < 0.0f) {

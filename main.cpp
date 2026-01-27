@@ -178,6 +178,9 @@ int main(int, char*[]) {
     bool quit = false;
     // Event set
     SDL_Event e;
+    // ---- Flag if the ball hit the wall 
+    int hit = 0;
+    
     // Main loop 
     while (!quit) {
         // Events
@@ -243,6 +246,7 @@ int main(int, char*[]) {
         ball.x += ball.vx * dt;
         ball.y += ball.vy * dt;
 
+
         // --- Bounce on walls ---
         if (ball.y - ball.r < 0.0f) {
             ball.y = static_cast<float>(ball.r);
@@ -252,10 +256,16 @@ int main(int, char*[]) {
             ball.y = static_cast<float>(HEIGHT - ball.r);
             ball.vy = -ball.vy;
         }
+        
         if (ball.x - ball.r < 0.0f) {
             ball.x = static_cast<float>(ball.r);
             ball.vx = -ball.vx;
-        }
+            int test = ball.x - ball.r;
+            cout << "test " << test << endl;
+            hit ++;
+            cout << "The ball hit the left wall " << hit << " times" << endl;
+            }
+            
         if (ball.x + ball.r > static_cast<float>(WIDTH)) {
             ball.x = static_cast<float>(WIDTH - ball.r);
             ball.vx = -ball.vx;
@@ -274,7 +284,7 @@ int main(int, char*[]) {
                     ball.vx = -ball.vx;
                     float rel = ((ball.y - rectangle_move.y) - (rectangle_move.h * 0.5f)) / (rectangle_move.h * 0.5f);
                     ball.vy += rel * 250.0f;
-                    float mag = std::sqrt(ball.vx*ball.vx + ball.vy*ball.vy);
+                    float mag = sqrt(ball.vx*ball.vx + ball.vy*ball.vy);
                     if (mag > 0.0f) {
                         ball.vx = (ball.vx / mag) * speed;
                         ball.vy = (ball.vy / mag) * speed;
@@ -282,7 +292,7 @@ int main(int, char*[]) {
                 }
             }
         }
-
+        
         // --- Paddle (right rectangle) collision ---
         if (ball.vx > 0.0f) {
             float paddleLeft = static_cast<float>(cpu_rect.x);
@@ -296,7 +306,7 @@ int main(int, char*[]) {
                     ball.vx = -ball.vx;
                     float rel = ((ball.y - cpu_rect.y) - (cpu_rect.h * 0.5f)) / (cpu_rect.h * 0.5f);
                     ball.vy += rel * 250.0f;
-                    float mag = std::sqrt(ball.vx*ball.vx + ball.vy*ball.vy);
+                    float mag = sqrt(ball.vx*ball.vx + ball.vy*ball.vy);
                     if (mag > 0.0f) {
                         ball.vx = (ball.vx / mag) * speed;
                         ball.vy = (ball.vy / mag) * speed;
@@ -304,7 +314,7 @@ int main(int, char*[]) {
                 }
             }
         }
-
+        
         // Clear the first screen to render the rest
         SDL_SetRenderDrawColor(renderer, BLACK);
         SDL_RenderClear(renderer);
@@ -333,8 +343,9 @@ int main(int, char*[]) {
         SDL_RenderFillRect(renderer, &cpu_rect);
 
         SDL_RenderPresent(renderer);
+        
     }
-
+    
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(mainWindow);
     SDL_Quit();

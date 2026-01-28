@@ -173,14 +173,11 @@ int main(int, char*[]) {
     // Drawing the rectangle in the starting position
     SDL_Rect middle_rect = {(WIDTH / 2) - 10, 0, 20, HEIGHT};
 
-    // Dragging flag 
-    bool is_dragging = false;
-    SDL_Point click_offset = {0, 0}; // mouse click offset inside the rect
     // Quit flag
     bool quit = false;
     // Event set
     SDL_Event e;
-    // ---- Flag if the ball hit the wall 
+    // Flag if the ball hit the wall 
     int hit = 0;
     const float paddleSpeed = 380.0f;  // pixels/sec for the left paddle
     // Main loop 
@@ -229,8 +226,6 @@ int main(int, char*[]) {
         if (ball.x - ball.r < 0.0f) {
             ball.x = static_cast<float>(ball.r);
             ball.vx = -ball.vx;
-            int test = ball.x - ball.r;
-            cout << "test " << test << endl;
             hit ++;
             cout << "The ball hit the left wall " << hit << " times" << endl;
             }

@@ -6,6 +6,7 @@
     add a score punctuation on the terminal (ready)
     add a pause button 
     add score on the screen
+    
 */
 #include <iostream>
 #include <SDL2/SDL.h>

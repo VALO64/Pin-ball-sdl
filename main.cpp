@@ -158,7 +158,7 @@ int main(int, char*[]) {
     ball.y  = 150.0f;
 
     // Random direction at constant speed
-    const float speed = 400.0f; // pixels per second
+    float speed = 400.0f; // pixels per second
     const float TWO_PI = 6.283185307179586f;
     float angle = randf(rng, 0.0f, TWO_PI);
     //Angles when the ball hits 
@@ -193,6 +193,9 @@ int main(int, char*[]) {
             }
         }
 
+        const Uint8 *keyState = SDL_GetKeyboardState(NULL);
+
+
         // --- Time step for the ball ---
         Uint32 now = SDL_GetTicks();
         float dt = (now - last_ticks) / 1000.0f;
@@ -203,10 +206,28 @@ int main(int, char*[]) {
         float prevY = ball.y;
         ball.x += ball.vx * dt;
         ball.y += ball.vy * dt;
-        const Uint8 *keyState = SDL_GetKeyboardState(NULL);
+        //Pause 
+        if (keyState[SDL_SCANCODE_ESCAPE]){
+            cout << "Game paused!\nPress space to resume it!\n";
+            //bool key_scape_flag = false;
+            ball.vx = 0;
+            ball.vy = 0;
+        }
+        //Resume
+        if (keyState[SDL_SCANCODE_SPACE]){
+            cout << "Game resumed!\n";
+            ball.vx = cos(angle) * speed;
+            ball.vy = sin(angle) * speed;
+            prevX = ball.x;
+            prevY = ball.y;
+            ball.x += ball.vx * dt;
+            ball.y += ball.vy * dt;
+        }        
         // keyboard settings 
         if (keyState[SDL_SCANCODE_W]| keyState[SDL_SCANCODE_UP]) {
             rectangle_move.y -= static_cast<int>(paddleSpeed * dt);
+            //ball.x += ball.vx * dt;
+            //ball.y += ball.vy * dt;
         }
         if (keyState[SDL_SCANCODE_S] | keyState[SDL_SCANCODE_DOWN]){
             rectangle_move.y += static_cast<int>(paddleSpeed * dt);

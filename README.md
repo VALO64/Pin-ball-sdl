@@ -39,3 +39,6 @@ sudo apt install libsdl2-dev
 
 ![ScreenRecording2026-01-27at17 55 51-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/357cfe2e-655c-41ba-8f8a-500c0e8c05ef)
 
+- V1.2.1
+To pouse the game you have to push scape key on your keyboard, to resume it you have to press space bar
+

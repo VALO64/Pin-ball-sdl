@@ -22,6 +22,10 @@ One important thing is install SDL on your system just research on internet how 
 ```
 g++ -Wall -Wextra main.cpp -o demo `sdl2-config --cflags --libs`
 ```
+***If you're working in linux (I'm using mint)***
+```
+g++ -Wall -Wextra main.cpp -o demo $(sdl2-config --cflags --libs)
+```
 
 ## Installing SDL on your system
 
